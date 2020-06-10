@@ -120,7 +120,6 @@
   <ItemGroup>
     <Content Include="capture.ico" />
     <None Include="Resources\droplist.png" />
-    <Content Include="donk.png" />
     <None Include="Resources\notes.png" />
     <Content Include="Resources\recording.png" />
     <Content Include="Resources\shutdown.png" />
