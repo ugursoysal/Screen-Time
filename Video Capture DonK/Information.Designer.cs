@@ -29,33 +29,36 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Information));
-            this.captureTree = new System.Windows.Forms.TreeView();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // captureTree
+            // textBox1
             // 
-            this.captureTree.Location = new System.Drawing.Point(13, 13);
-            this.captureTree.Name = "captureTree";
-            this.captureTree.Size = new System.Drawing.Size(775, 425);
-            this.captureTree.TabIndex = 0;
+            this.textBox1.Location = new System.Drawing.Point(13, 13);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(775, 425);
+            this.textBox1.TabIndex = 0;
             // 
             // Information
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.captureTree);
+            this.Controls.Add(this.textBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Information";
-            this.Text = "Capture List";
+            this.Text = "Notes";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.Information_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TreeView captureTree;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

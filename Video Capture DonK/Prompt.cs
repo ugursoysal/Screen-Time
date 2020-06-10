@@ -13,17 +13,17 @@ namespace Video_Capture_DonK
         {
             Form prompt = new Form()
             {
-                Width = 500,
-                Height = 150,
+                Width = 300,
+                Height = 120,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 Text = caption,
                 StartPosition = FormStartPosition.CenterScreen,
                 MinimizeBox = false,
                 MaximizeBox = false
             };
-            Label textLabel = new Label() { Left = 50, Top = 20, Text = text, AutoSize = true };
-            TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 400 };
-            Button confirmation = new Button() { Text = option, Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
+            Label textLabel = new Label() { Left = 49, Top = 15, Text = text, AutoSize = true };
+            TextBox textBox = new TextBox() { Left = 50, Top = 30, Width = 200, MaxLength = 30 };
+            Button confirmation = new Button() { Text = option, Left = 150, Width = 100, Top = 50, DialogResult = DialogResult.OK };
             confirmation.Click += (sender, e) => { prompt.Close(); };
             prompt.Controls.Add(textBox);
             prompt.Controls.Add(confirmation);

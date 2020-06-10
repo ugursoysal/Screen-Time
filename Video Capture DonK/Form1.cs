@@ -78,27 +78,19 @@ namespace Video_Capture_DonK
                                         MessageBoxButtons.YesNo);
             if (confirmResult == DialogResult.Yes)
             {
-                if (rec != null)
-                    rec.Dispose();
+                SaveRecord();
                 Application.Exit();
             }
         }
         private void Record_Click(object sender, EventArgs e)
         {
-            if(selectedCompany == null)
+            if(selectedCompany == null || selectedCompany == "(Select a company)")
             {
                 MessageBox.Show("Please select a company.");
             }
             else if (rec == null)
             {
-                Program.Paused = false;
-                recordButton.BackgroundImage = Properties.Resources.pause;
-                captureLog = new CaptureLog(selectedCompany);
-                rec = new Recorder(new RecorderParams(Path.Combine(VIDEOS_DIRECTORY, captureLog.GetFilename() + ".avi"), 27, SharpAvi.KnownFourCCs.Codecs.MotionJpeg, 100));
-                TimePassed = 0;
-                companyDropList.Enabled = false;
-                timeTimer.Enabled = true;
-                timeTimer.Start();
+                StartRecording();
             }
             else
             {
@@ -107,12 +99,14 @@ namespace Video_Capture_DonK
                     timeTimer.Enabled = true;
                     timeTimer.Start();
                     recordButton.BackgroundImage = Properties.Resources.pause;
+                    indicatorLight.BackgroundImage = Properties.Resources.recording;
                 }
                 else
                 {
                     timeTimer.Stop();
                     timeTimer.Enabled = false;
                     recordButton.BackgroundImage = Properties.Resources.play;
+                    indicatorLight.BackgroundImage = Properties.Resources.record;
                 }
                 Program.Paused = !Program.Paused;
             }
@@ -122,13 +116,24 @@ namespace Video_Capture_DonK
             TimePassed++;
             timePassed.Text = Func.GetTimeText(TimePassed);
         }
+        private void StartRecording()
+        {
+            Program.Paused = false;
+            recordButton.BackgroundImage = Properties.Resources.pause;
+            indicatorLight.BackgroundImage = Properties.Resources.recording;
+            captureLog = new CaptureLog(selectedCompany);
+            rec = new Recorder(new RecorderParams(Path.Combine(VIDEOS_DIRECTORY, captureLog.GetFilename() + ".avi"), 27, SharpAvi.KnownFourCCs.Codecs.MotionJpeg, 100));
+            TimePassed = 0;
+            timeTimer.Enabled = true;
+            timeTimer.Start();
+        }
         private void SaveRecord()
         {
             if (rec != null)
             {
-                companyDropList.Enabled = true;
                 timeTimer.Enabled = false;
                 timeTimer.Stop();
+                indicatorLight.BackgroundImage = Properties.Resources.record;
                 recordButton.BackgroundImage = Properties.Resources.play;
                 rec.Dispose();
                 rec = null;
@@ -140,7 +145,7 @@ namespace Video_Capture_DonK
                 }
                 captureLogs.Add(captureLog);
                 DatabaseHandler.SaveCaptureLogs(capturesFile, captureLogs);
-                MessageBox.Show("Video has been successfully captured and saved to the directory.");
+                MessageBox.Show("Video has been successfully captured and saved to the directory." + Environment.NewLine + Environment.NewLine + "(Duration: " + Func.GetTimeText(captureLog.TimePassed) + ")", captureLog.CompanyName);
             }
         }
         private void CompanyDropList_SelectedIndexChanged(object sender, EventArgs e)
@@ -164,6 +169,7 @@ namespace Video_Capture_DonK
                         companies.Add(new Company(promptValue));
                         DatabaseHandler.SaveCompanies(companiesFile, companies);
                         PopulateDropLists();
+                        companyDropList.SelectedItem = promptValue;
                     }
                 }
                 else if (companyDropList.SelectedItem.ToString() == "(Delete company...)")
@@ -189,20 +195,40 @@ namespace Video_Capture_DonK
                         }
                         DatabaseHandler.SaveCompanies(companiesFile, companies);
                         PopulateDropLists();
+                        companyDropList.SelectedItem = "(Select a company)";
+                        companyLabel.Text = "(Select a company)";
                     }
                 }
                 else
                 {
-                    selectedCompany = companyDropList.SelectedItem.ToString();
-                    companyLabel.Text = selectedCompany;
+                    if (rec == null)
+                    {
+                        selectedCompany = companyDropList.SelectedItem.ToString();
+                        companyLabel.Text = selectedCompany;
+                    }
+                    else
+                    {
+                        SaveRecord();
+                        selectedCompany = companyDropList.SelectedItem.ToString();
+                        companyLabel.Text = selectedCompany;
+                        StartRecording();
+                    }
                 }
             }
         }
-
-        private void Info_Click(object sender, EventArgs e)
+        private void NotesButton_Click(object sender, EventArgs e)
         {
-            Information information = new Information();
-            information.Show();
+            if (selectedCompany == null || selectedCompany == "(Select a company)")
+            {
+                MessageBox.Show("Please select a company.");
+            }else if(rec == null)
+            {
+                MessageBox.Show("You can only add notes while you're recording.");
+            }
+            else{
+                Information information = new Information(selectedCompany, Func.GetTimeText(captureLog.TimePassed));
+                information.Show();
+            }
         }
     }
 }

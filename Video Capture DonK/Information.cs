@@ -14,13 +14,19 @@ namespace Video_Capture_DonK
 {
     public partial class Information : Form
     {
-        private readonly string capturesFile = "capture_logs.json";
-        public Information()
+        readonly string Company;
+        readonly string RecordTime;
+        public Information(string selectedCompany, string recTime)
         {
+            RecordTime = recTime;
+            Company = selectedCompany;
             InitializeComponent();
         }
         private void Information_Load(object sender, EventArgs e)
         {
+            this.Text = "Notes: " + Company + " (" + RecordTime + ")";
+            textBox1.Text = Company;
+            /*
             List<CaptureLog> captureLogs = DatabaseHandler.LoadCaptureLogs(capturesFile);
             if (captureLogs != null)
             {
@@ -46,7 +52,7 @@ namespace Video_Capture_DonK
                     TreeNode newNode = new TreeNode(x, array);
                     captureTree.Nodes.Add(newNode);
                 }
-            }
+            }*/
         }
     }
 }

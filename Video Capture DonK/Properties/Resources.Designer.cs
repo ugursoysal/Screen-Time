@@ -83,6 +83,16 @@ namespace Video_Capture_DonK.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap notes {
+            get {
+                object obj = ResourceManager.GetObject("notes", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap pause {
             get {
                 object obj = ResourceManager.GetObject("pause", resourceCulture);
@@ -113,9 +123,9 @@ namespace Video_Capture_DonK.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap shutdown {
+        internal static System.Drawing.Bitmap recording {
             get {
-                object obj = ResourceManager.GetObject("shutdown", resourceCulture);
+                object obj = ResourceManager.GetObject("recording", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +133,9 @@ namespace Video_Capture_DonK.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap stop2 {
+        internal static System.Drawing.Bitmap shutdown {
             get {
-                object obj = ResourceManager.GetObject("stop2", resourceCulture);
+                object obj = ResourceManager.GetObject("shutdown", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

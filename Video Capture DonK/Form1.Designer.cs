@@ -41,19 +41,21 @@ namespace Video_Capture_DonK
             this.shutdownButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.companyLabel = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.indicatorLight = new System.Windows.Forms.PictureBox();
+            this.notesButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.indicatorLight)).BeginInit();
             this.SuspendLayout();
             // 
             // timePassed
             // 
             this.timePassed.AutoSize = true;
             this.timePassed.BackColor = System.Drawing.Color.Transparent;
+            this.timePassed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.timePassed.ForeColor = System.Drawing.Color.White;
-            this.timePassed.Location = new System.Drawing.Point(371, 7);
+            this.timePassed.Location = new System.Drawing.Point(366, 7);
             this.timePassed.Name = "timePassed";
-            this.timePassed.Size = new System.Drawing.Size(49, 13);
+            this.timePassed.Size = new System.Drawing.Size(57, 13);
             this.timePassed.TabIndex = 1;
             this.timePassed.Text = "00:00:00";
             // 
@@ -122,6 +124,8 @@ namespace Video_Capture_DonK
             // companyLabel
             // 
             this.companyLabel.BackColor = System.Drawing.Color.Transparent;
+            this.companyLabel.Enabled = false;
+            this.companyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.companyLabel.ForeColor = System.Drawing.Color.White;
             this.companyLabel.Location = new System.Drawing.Point(85, 6);
             this.companyLabel.Name = "companyLabel";
@@ -130,18 +134,37 @@ namespace Video_Capture_DonK
             this.companyLabel.Text = "(Select a company)";
             this.companyLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // pictureBox2
+            // indicatorLight
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox2.BackgroundImage = global::Video_Capture_DonK.Properties.Resources.record;
-            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox2.ErrorImage = null;
-            this.pictureBox2.InitialImage = null;
-            this.pictureBox2.Location = new System.Drawing.Point(37, 5);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox2.TabIndex = 5;
-            this.pictureBox2.TabStop = false;
+            this.indicatorLight.BackColor = System.Drawing.Color.Transparent;
+            this.indicatorLight.BackgroundImage = global::Video_Capture_DonK.Properties.Resources.record;
+            this.indicatorLight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.indicatorLight.ErrorImage = null;
+            this.indicatorLight.InitialImage = null;
+            this.indicatorLight.Location = new System.Drawing.Point(37, 5);
+            this.indicatorLight.Name = "indicatorLight";
+            this.indicatorLight.Size = new System.Drawing.Size(18, 18);
+            this.indicatorLight.TabIndex = 5;
+            this.indicatorLight.TabStop = false;
+            // 
+            // notesButton
+            // 
+            this.notesButton.BackColor = System.Drawing.Color.Transparent;
+            this.notesButton.BackgroundImage = global::Video_Capture_DonK.Properties.Resources.notes;
+            this.notesButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.notesButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.notesButton.FlatAppearance.BorderSize = 0;
+            this.notesButton.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.notesButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.notesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.notesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.notesButton.ForeColor = System.Drawing.Color.Transparent;
+            this.notesButton.Location = new System.Drawing.Point(270, 4);
+            this.notesButton.Name = "notesButton";
+            this.notesButton.Size = new System.Drawing.Size(18, 18);
+            this.notesButton.TabIndex = 6;
+            this.notesButton.UseVisualStyleBackColor = false;
+            this.notesButton.Click += new System.EventHandler(this.NotesButton_Click);
             // 
             // Form1
             // 
@@ -151,7 +174,8 @@ namespace Video_Capture_DonK
             this.BackgroundImage = global::Video_Capture_DonK.Properties.Resources.background;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(452, 28);
-            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.notesButton);
+            this.Controls.Add(this.indicatorLight);
             this.Controls.Add(this.companyLabel);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.companyDropList);
@@ -165,12 +189,12 @@ namespace Video_Capture_DonK
             this.MaximumSize = new System.Drawing.Size(452, 28);
             this.MinimumSize = new System.Drawing.Size(452, 28);
             this.Name = "Form1";
-            this.Text = "Video Capture (special software for Don K.)";
+            this.Text = "Video Capture (Don K.)";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.SystemColors.ActiveBorder;
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.indicatorLight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -184,7 +208,8 @@ namespace Video_Capture_DonK
         private ComboBox companyDropList;
         private PictureBox pictureBox1;
         private Label companyLabel;
-        private PictureBox pictureBox2;
+        private PictureBox indicatorLight;
+        private Button notesButton;
     }
 }
 

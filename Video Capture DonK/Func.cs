@@ -10,7 +10,7 @@ namespace Video_Capture_DonK
     {
         public static string GetTimeText(int sec)
         {
-            int hours = sec % 3600;
+            int hours = (sec > 3600) ? sec % 3600 : 0;
             int seconds = sec % 60;
             int minutes = sec / 60;
             string hour = hours.ToString();
