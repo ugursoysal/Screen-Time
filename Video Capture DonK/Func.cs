@@ -10,15 +10,19 @@ namespace Video_Capture_DonK
     {
         public static string GetTimeText(int sec)
         {
+            int hours = sec % 3600;
             int seconds = sec % 60;
             int minutes = sec / 60;
+            string hour = hours.ToString();
             string mins = minutes.ToString();
             string secs = seconds.ToString();
+            if (hours < 10)
+                hour = "0" + hours;
             if (minutes < 10)
                 mins = "0" + mins;
             if (seconds < 10)
                 secs = "0" + secs;
-            return $"{mins}:{secs}";
+            return $"{hour}:{mins}:{secs}";
         }
     }
 }

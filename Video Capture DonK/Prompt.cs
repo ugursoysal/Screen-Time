@@ -9,7 +9,7 @@ namespace Video_Capture_DonK
 {
     public static class Prompt
     {
-        public static string ShowDialog(string text, string caption)
+        public static string ShowDialog(string text, string caption, string option)
         {
             Form prompt = new Form()
             {
@@ -23,7 +23,7 @@ namespace Video_Capture_DonK
             };
             Label textLabel = new Label() { Left = 50, Top = 20, Text = text, AutoSize = true };
             TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 400 };
-            Button confirmation = new Button() { Text = "Add", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
+            Button confirmation = new Button() { Text = option, Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
             confirmation.Click += (sender, e) => { prompt.Close(); };
             prompt.Controls.Add(textBox);
             prompt.Controls.Add(confirmation);

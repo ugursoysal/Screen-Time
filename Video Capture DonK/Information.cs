@@ -19,27 +19,17 @@ namespace Video_Capture_DonK
         {
             InitializeComponent();
         }
-        class Match
-        {
-            public string Company { get; set; }
-            public string Client { get; set; }
-            public Match(string comp, string cli)
-            {
-                Company = comp;
-                Client = cli;
-            }
-        }
         private void Information_Load(object sender, EventArgs e)
         {
             List<CaptureLog> captureLogs = DatabaseHandler.LoadCaptureLogs(capturesFile);
             if (captureLogs != null)
             {
-                List<Match> combinations = new List<Match>();
+                List<string> combinations = new List<string>();
                 foreach (var x in captureLogs)
                 {
-                    if (combinations.Count(a => a.Client == x.ClientName && a.Company == x.CompanyName) == 0)
+                    if (!combinations.Contains(x.CompanyName))
                     {
-                        combinations.Add(new Match(x.CompanyName, x.ClientName));
+                        combinations.Add(x.CompanyName);
                     }
                 }
                 foreach (var x in combinations)
@@ -47,13 +37,13 @@ namespace Video_Capture_DonK
                     List<TreeNode> newTree = new List<TreeNode>();
                     foreach (var c in captureLogs)
                     {
-                        if (c.ClientName == x.Client && c.CompanyName == x.Company)
+                        if (c.CompanyName == x)
                         {
                             newTree.Add(new TreeNode(Func.GetTimeText(c.TimePassed) + " (date: " + c.DateTime.ToLocalTime().ToString() + ")"));
                         }
                     }
                     TreeNode[] array = newTree.ToArray();
-                    TreeNode newNode = new TreeNode(x.Client + " (company: " + x.Company + ")", array);
+                    TreeNode newNode = new TreeNode(x, array);
                     captureTree.Nodes.Add(newNode);
                 }
             }

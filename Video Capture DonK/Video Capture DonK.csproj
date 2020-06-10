@@ -78,7 +78,6 @@
     </Compile>
     <Compile Include="Models\CaptureLog.cs" />
     <Compile Include="Models\Company.cs" />
-    <Compile Include="Models\Customer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Prompt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,22 +112,20 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\shutdown.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\record.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\stop2.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\info.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\pause.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="capture.ico" />
+    <None Include="Resources\droplist.png" />
+    <Content Include="Resources\shutdown.png" />
+    <None Include="Resources\play.png" />
+    <None Include="Resources\background.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.6.0.0\build\Fody.targets" Condition="Exists('..\packages\Fody.6.0.0\build\Fody.targets')" />
