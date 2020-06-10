@@ -123,6 +123,7 @@
   <ItemGroup>
     <Content Include="capture.ico" />
     <None Include="Resources\droplist.png" />
+    <Content Include="donk.png" />
     <Content Include="Resources\shutdown.png" />
     <None Include="Resources\play.png" />
     <None Include="Resources\background.png" />
