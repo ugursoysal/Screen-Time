@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Video_Capture_DonK.Models
 {
-    class CaptureLog
+    public class CaptureLog
     {
         public string CompanyName { get; set; }
         public DateTime DateTime { get; set; }
@@ -19,13 +19,13 @@ namespace Video_Capture_DonK.Models
             CompanyName = company;
             DateTime dateTime = DateTime.Now;
             DateTime = DateTime.Now;
-            DateText = "" + dateTime.Day + dateTime.Month + dateTime.Year;
-            TimeText = "" + dateTime.Hour + dateTime.Minute + dateTime.Second;
+            DateText = $"{dateTime.Day:00}-{dateTime.Month:00}-{dateTime.Year:0000}";
+            TimeText = $"{dateTime.Hour:00}.{dateTime.Minute:00}.{dateTime.Second:00}";
             TimePassed = 0;
         }
         public string GetFilename()
         {
-            return $"{CompanyName}_{DateText}_{TimeText}";
+            return $"{DateText}_{TimeText}";
         }
     }
 }

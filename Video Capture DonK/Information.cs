@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,17 +16,33 @@ namespace Video_Capture_DonK
     public partial class Information : Form
     {
         readonly string Company;
-        readonly string RecordTime;
-        public Information(string selectedCompany, string recTime)
+        readonly string filename;
+        readonly CaptureLog captureLog;
+        public Information(string selectedCompany, CaptureLog capLog)
         {
-            RecordTime = recTime;
+            captureLog = capLog;
+            string directory = Path.Combine(Form1.VIDEOS_DIRECTORY, captureLog.CompanyName);
+            filename = Path.Combine(directory, capLog.GetFilename() + ".txt");
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
             Company = selectedCompany;
             InitializeComponent();
         }
         private void Information_Load(object sender, EventArgs e)
         {
-            this.Text = "Notes: " + Company + " (" + RecordTime + ")";
-            textBox1.Text = Company;
+            Text = "Notes: " + Company + " (" + captureLog.DateTime.Date.ToShortDateString() + ")";
+            try
+            {
+                if (!File.Exists(filename))
+                    File.Create(filename).Close();
+                string text = File.ReadAllText(filename);
+                textBox1.Text = text;
+            }
+            catch(Exception x)
+            {
+                MessageBox.Show("Error occured while loading the notes of this session." + Environment.NewLine + Environment.NewLine + x.Message);
+                this.Close();
+            }
             /*
             List<CaptureLog> captureLogs = DatabaseHandler.LoadCaptureLogs(capturesFile);
             if (captureLogs != null)
@@ -53,6 +70,21 @@ namespace Video_Capture_DonK
                     captureTree.Nodes.Add(newNode);
                 }
             }*/
+        }
+
+        private void Information_Closing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                if (!File.Exists(filename))
+                    File.Create(filename).Close();
+                File.WriteAllText(filename, textBox1.Text);
+            }
+            catch(Exception x)
+            {
+                MessageBox.Show("Error occured while saving the notes of this session." + Environment.NewLine + Environment.NewLine + x.Message);
+                Dispose();
+            }
         }
     }
 }

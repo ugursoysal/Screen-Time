@@ -70,6 +70,13 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Func.cs" />
+    <Compile Include="GetLastUserInput.cs" />
+    <Compile Include="Inactivity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Inactivity.Designer.cs">
+      <DependentUpon>Inactivity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Information.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,6 +90,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Inactivity.resx">
+      <DependentUpon>Inactivity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Information.resx">
       <DependentUpon>Information.cs</DependentUpon>

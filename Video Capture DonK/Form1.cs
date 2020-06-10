@@ -16,18 +16,20 @@ namespace Video_Capture_DonK
 {
     public partial class Form1 : Form
     {
-
-        System.Windows.Forms.Timer timeTimer = null;
         Recorder rec = null;
         List<Company> companies = null;
         CaptureLog captureLog = null;
+        NotifyIcon notification = null;
         string selectedCompany = null;
-        private readonly string VIDEOS_DIRECTORY = Path.Combine(Directory.GetCurrentDirectory(), "videos");
+        public static readonly string VIDEOS_DIRECTORY = Func.GetVideosDirectory();
         private readonly string companiesFile = "companies.json";
         private readonly string capturesFile = "capture_logs.json";
+        bool wasPlaying = false;
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
-        int TimePassed = 0;
+        public int TimePassed = 0;
+        public int CompanyTime = 0;
+        readonly System.Windows.Forms.Timer timeTimer = null;
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -49,9 +51,9 @@ namespace Video_Capture_DonK
             if (!Directory.Exists(VIDEOS_DIRECTORY))
                 Directory.CreateDirectory(VIDEOS_DIRECTORY);
             if (!File.Exists(companiesFile))
-                File.CreateText(companiesFile);
+                File.CreateText(companiesFile).Close();
             if (!File.Exists(capturesFile))
-                File.CreateText(capturesFile);
+                File.CreateText(capturesFile).Close();
             companies = DatabaseHandler.ReadCompanies(companiesFile);
         }
         private void PopulateDropLists()
@@ -114,20 +116,34 @@ namespace Video_Capture_DonK
         private void TimeTimer_Tick(object sender, EventArgs e)
         {
             TimePassed++;
-            timePassed.Text = Func.GetTimeText(TimePassed);
+            timePassed.Text = Func.GetTimeText(CompanyTime + TimePassed);
+
+            uint idleCount = GetLastUserInput.GetLastUserInput.GetIdleTickCount();
+            TimeSpan timeSpan = TimeSpan.FromMilliseconds(idleCount);
+            if (timeSpan.TotalSeconds > 5)
+            {
+                new Inactivity(this, timeTimer, timePassed).Show();
+                timeTimer.Enabled = false;
+                timeTimer.Stop();
+            }
         }
         private void StartRecording()
         {
+            wasPlaying = false;
+            CompanyTime = DatabaseHandler.CalculateCompanyTimePassed(capturesFile, selectedCompany);
             Program.Paused = false;
             recordButton.BackgroundImage = Properties.Resources.pause;
             indicatorLight.BackgroundImage = Properties.Resources.recording;
             captureLog = new CaptureLog(selectedCompany);
-            rec = new Recorder(new RecorderParams(Path.Combine(VIDEOS_DIRECTORY, captureLog.GetFilename() + ".avi"), 27, SharpAvi.KnownFourCCs.Codecs.MotionJpeg, 100));
+            string directory = Path.Combine(VIDEOS_DIRECTORY, captureLog.CompanyName);
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+            rec = new Recorder(new RecorderParams(Path.Combine(directory, captureLog.GetFilename() + ".avi"), 30, SharpAvi.KnownFourCCs.Codecs.Xvid, 100));
             TimePassed = 0;
             timeTimer.Enabled = true;
             timeTimer.Start();
         }
-        private void SaveRecord()
+        public void SaveRecord()
         {
             if (rec != null)
             {
@@ -145,13 +161,33 @@ namespace Video_Capture_DonK
                 }
                 captureLogs.Add(captureLog);
                 DatabaseHandler.SaveCaptureLogs(capturesFile, captureLogs);
-                MessageBox.Show("Video has been successfully captured and saved to the directory." + Environment.NewLine + Environment.NewLine + "(Duration: " + Func.GetTimeText(captureLog.TimePassed) + ")", captureLog.CompanyName);
+                new Thread(() =>
+                {
+                    if (notification != null)
+                    {
+                        notification.Dispose();
+                        notification = null;
+                    }
+                    notification = new NotifyIcon()
+                    {
+                        Visible = true,
+                        Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location),
+                        BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info,
+                        BalloonTipTitle = captureLog.CompanyName,
+                        BalloonTipText = "Video has been saved to the user directory." + Environment.NewLine + Environment.NewLine + "(Duration for this session: " + Func.GetTimeText(TimePassed) + ")",
+                    };
+                    notification.ShowBalloonTip(6000);
+
+                    TimePassed = 0;
+                    Thread.Sleep(8000);
+                }).Start();
+                //MessageBox.Show("Video has been successfully captured and saved to the directory." + Environment.NewLine + Environment.NewLine + "(Duration for this session: " + Func.GetTimeText(captureLog.TimePassed) + ")", captureLog.CompanyName);
             }
         }
         private void CompanyDropList_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            if (companyDropList.SelectedItem != null)
+            if (companyDropList.SelectedItem != null && companyDropList.SelectedItem.ToString() != selectedCompany)
             {
                 if (companyDropList.SelectedItem.ToString() == "(New company...)")
                 {
@@ -162,14 +198,26 @@ namespace Video_Capture_DonK
                     }
                     else if (promptValue.Length > 0)
                     {
+                        if (rec != null)
+                            SaveRecord();
                         if (companies == null)
                         {
                             companies = new List<Company>();
                         }
-                        companies.Add(new Company(promptValue));
-                        DatabaseHandler.SaveCompanies(companiesFile, companies);
-                        PopulateDropLists();
-                        companyDropList.SelectedItem = promptValue;
+                        if (companies.Count(a => a.Name == promptValue) > 0)
+                        {
+                            MessageBox.Show("This company already exists in the companies list.");
+                        }
+                        else
+                        {
+                            companies.Add(new Company(promptValue));
+                            DatabaseHandler.SaveCompanies(companiesFile, companies);
+                            PopulateDropLists();
+                            companyLabel.Text = promptValue;
+                            CompanyTime = 0;
+                            timePassed.Text = Func.GetTimeText(0);
+                            companyDropList.SelectedItem = promptValue;
+                        }
                     }
                 }
                 else if (companyDropList.SelectedItem.ToString() == "(Delete company...)")
@@ -185,33 +233,53 @@ namespace Video_Capture_DonK
                         {
                             companies = new List<Company>();
                         }
-                        foreach (var x in companies)
+                        if (companies.Count(a => a.Name == promptValue) > 0)
                         {
-                            if (x.Name == promptValue)
+                            foreach (var x in companies)
                             {
-                                companies.Remove(x);
-                                break;
+                                if (x.Name == promptValue)
+                                {
+                                    companies.Remove(x);
+                                    break;
+                                }
+                            }
+                            DatabaseHandler.SaveCompanies(companiesFile, companies);
+                            PopulateDropLists();
+                            if (promptValue == selectedCompany)
+                            {
+                                if (rec != null)
+                                    SaveRecord();
+                                selectedCompany = "(Select a company)";
+                                companyLabel.Text = selectedCompany;
+                                CompanyTime = 0;
+                                timePassed.Text = Func.GetTimeText(0);
+                                companyDropList.SelectedItem = selectedCompany;
                             }
                         }
-                        DatabaseHandler.SaveCompanies(companiesFile, companies);
-                        PopulateDropLists();
-                        companyDropList.SelectedItem = "(Select a company)";
-                        companyLabel.Text = "(Select a company)";
+
                     }
                 }
                 else
                 {
                     if (rec == null)
                     {
+                        TimePassed = 0;
                         selectedCompany = companyDropList.SelectedItem.ToString();
                         companyLabel.Text = selectedCompany;
+                        CompanyTime = DatabaseHandler.CalculateCompanyTimePassed(capturesFile, selectedCompany);
+                        timePassed.Text = Func.GetTimeText(CompanyTime + TimePassed);
                     }
                     else
                     {
+                        if (timeTimer.Enabled)
+                            wasPlaying = true;
                         SaveRecord();
                         selectedCompany = companyDropList.SelectedItem.ToString();
                         companyLabel.Text = selectedCompany;
-                        StartRecording();
+                        CompanyTime = DatabaseHandler.CalculateCompanyTimePassed(capturesFile, selectedCompany);
+                        if (selectedCompany != "(Select a company)" && selectedCompany.Length > 0 && wasPlaying)
+                            StartRecording();
+                        timePassed.Text = Func.GetTimeText(CompanyTime + TimePassed);
                     }
                 }
             }
@@ -221,13 +289,29 @@ namespace Video_Capture_DonK
             if (selectedCompany == null || selectedCompany == "(Select a company)")
             {
                 MessageBox.Show("Please select a company.");
-            }else if(rec == null)
+            }
+            else if(rec == null)
             {
                 MessageBox.Show("You can only add notes while you're recording.");
             }
-            else{
-                Information information = new Information(selectedCompany, Func.GetTimeText(captureLog.TimePassed));
-                information.Show();
+            else
+            {
+                try
+                {
+                    (new Information(selectedCompany, captureLog)).Show();
+                }
+                catch
+                {
+                    MessageBox.Show("Error in Notes application.");
+                }
+            }
+        }
+
+        private void Form1_Closing(object sender, FormClosingEventArgs e)
+        {
+            if (notification != null)
+            {
+                notification.Dispose();
             }
         }
     }

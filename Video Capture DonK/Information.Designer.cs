@@ -51,6 +51,7 @@
             this.Name = "Information";
             this.Text = "Notes";
             this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Information_Closing);
             this.Load += new System.EventHandler(this.Information_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
