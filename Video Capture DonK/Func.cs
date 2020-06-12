@@ -8,9 +8,9 @@ namespace Video_Capture_DonK
     {
         public static string GetTimeText(int sec)
         {
-            int hours = (sec > 3600) ? sec % 3600 : 0;
             int seconds = sec % 60;
             int minutes = sec / 60;
+            int hours = (sec > 3600) ? sec / 3600 : 0;
             string hour = hours.ToString("00");
             string mins = minutes.ToString("00");
             string secs = seconds.ToString("00");
@@ -21,7 +21,7 @@ namespace Video_Capture_DonK
             string path = Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).FullName;
             if (Environment.OSVersion.Version.Major >= 6)
             {
-                path = Directory.GetParent(path).ToString();
+                path = Path.Combine(Directory.GetParent(path).ToString(), "ScreenTime");
             }
             return path;
         }

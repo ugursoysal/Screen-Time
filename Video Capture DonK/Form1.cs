@@ -124,7 +124,7 @@ namespace Video_Capture_DonK
 
             uint idleCount = GetLastUserInput.GetLastUserInput.GetIdleTickCount();
             TimeSpan timeSpan = TimeSpan.FromMilliseconds(idleCount);
-            if (timeSpan.TotalSeconds > 300)
+            if (timeSpan.TotalSeconds > 179)
             {
                 new Inactivity(this, timeTimer, timePassed).Show();
                 timeTimer.Enabled = false;
