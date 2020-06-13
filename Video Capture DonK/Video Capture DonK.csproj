@@ -42,6 +42,9 @@
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -61,8 +64,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioRecorder.cs" />
     <Compile Include="Captura.cs" />
     <Compile Include="DatabaseHandler.cs" />
+    <Compile Include="FormSmall.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSmall.Designer.cs">
+      <DependentUpon>FormSmall.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +98,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Prompt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormSmall.resx">
+      <DependentUpon>FormSmall.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -131,6 +144,9 @@
     <Content Include="capture.ico" />
     <None Include="Resources\droplist.png" />
     <None Include="Resources\notes.png" />
+    <None Include="Resources\mic.png" />
+    <None Include="Resources\mic_recording.png" />
+    <None Include="Resources\capture_icon.png" />
     <Content Include="Resources\recording.png" />
     <Content Include="Resources\shutdown.png" />
     <None Include="Resources\play.png" />

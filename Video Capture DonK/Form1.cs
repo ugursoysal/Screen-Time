@@ -17,6 +17,7 @@ namespace Video_Capture_DonK
     public partial class Form1 : Form
     {
         Recorder rec = null;
+        AudioRecorder audioRec = null;
         List<Company> companies = null;
         CaptureLog captureLog = null;
         NotifyIcon notification = null;
@@ -29,6 +30,8 @@ namespace Video_Capture_DonK
         public const int HT_CAPTION = 0x2;
         public int TimePassed = 0;
         public int CompanyTime = 0;
+        public Image RecordButtonImage { get { return this.recordButton.BackgroundImage; } }
+        public Image IndicatorImage { get { return this.indicatorLight.BackgroundImage; } }
         readonly System.Windows.Forms.Timer timeTimer = null;
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
@@ -80,17 +83,13 @@ namespace Video_Capture_DonK
                                         MessageBoxButtons.YesNo);
             if (confirmResult == DialogResult.Yes)
             {
-                SaveRecord();
-                if (notification != null)
-                {
-                    notification.Dispose();
-                }
+                SaveRecord(false);
                 Application.Exit();
             }
         }
-        private void Record_Click(object sender, EventArgs e)
+        public void Record_Click(object sender, EventArgs e)
         {
-            if(selectedCompany == null || selectedCompany == "(Select a company)")
+            if (selectedCompany == null || selectedCompany == "(Select a company)")
             {
                 MessageBox.Show("Please select a company.");
             }
@@ -147,10 +146,16 @@ namespace Video_Capture_DonK
             timeTimer.Enabled = true;
             timeTimer.Start();
         }
-        public void SaveRecord()
+        public void SaveRecord(bool showNotification = true)
         {
             if (rec != null)
             {
+                if(audioRec != null)
+                {
+                    audioButton.BackgroundImage = Properties.Resources.mic;
+                    audioRec.StopRecording();
+                    audioRec = null;
+                }
                 timeTimer.Enabled = false;
                 timeTimer.Stop();
                 indicatorLight.BackgroundImage = Properties.Resources.record;
@@ -159,32 +164,35 @@ namespace Video_Capture_DonK
                 rec = null;
                 List<CaptureLog> captureLogs = DatabaseHandler.LoadCaptureLogs(capturesFile);
                 captureLog.TimePassed = TimePassed;
-                if(captureLogs == null)
+                if (captureLogs == null)
                 {
                     captureLogs = new List<CaptureLog>();
                 }
                 captureLogs.Add(captureLog);
                 DatabaseHandler.SaveCaptureLogs(capturesFile, captureLogs);
-                new Thread(() =>
-                {
-                    if (notification != null)
-                    {
-                        notification.Dispose();
-                        notification = null;
-                    }
-                    notification = new NotifyIcon()
-                    {
-                        Visible = true,
-                        Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location),
-                        BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info,
-                        BalloonTipTitle = captureLog.CompanyName,
-                        BalloonTipText = "Video has been saved to the user directory." + Environment.NewLine + Environment.NewLine + "(Duration for this session: " + Func.GetTimeText(TimePassed) + ")",
-                    };
-                    notification.ShowBalloonTip(6000);
 
-                    TimePassed = 0;
-                    Thread.Sleep(8000);
-                }).Start();
+                if (showNotification)
+                    new Thread(() =>
+                    {
+                        if (notification != null)
+                        {
+                            notification.ShowBalloonTip(1);
+                            notification?.Dispose();
+                            notification = null;
+                        }
+                        notification = new NotifyIcon()
+                        {
+                            Visible = true,
+                            Icon = Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location),
+                            BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info,
+                            BalloonTipTitle = captureLog.CompanyName,
+                            BalloonTipText = "Video has been saved to the user directory." + Environment.NewLine + Environment.NewLine + "(Duration for this session: " + Func.GetTimeText(TimePassed) + ")",
+                        };
+                        notification.ShowBalloonTip(6000);
+
+                        TimePassed = 0;
+                        Thread.Sleep(8000);
+                    }).Start();
                 //MessageBox.Show("Video has been successfully captured and saved to the directory." + Environment.NewLine + Environment.NewLine + "(Duration for this session: " + Func.GetTimeText(captureLog.TimePassed) + ")", captureLog.CompanyName);
             }
         }
@@ -231,7 +239,7 @@ namespace Video_Capture_DonK
                     {
                         MessageBox.Show("Company name should be less than 30 characters.");
                     }
-                    else if(promptValue.Length > 0)
+                    else if (promptValue.Length > 0)
                     {
                         if (companies == null)
                         {
@@ -294,7 +302,7 @@ namespace Video_Capture_DonK
             {
                 MessageBox.Show("Please select a company.");
             }
-            else if(rec == null)
+            else if (rec == null)
             {
                 MessageBox.Show("You can only add notes while you're recording.");
             }
@@ -302,7 +310,7 @@ namespace Video_Capture_DonK
             {
                 try
                 {
-                    (new Information(selectedCompany, captureLog)).Show();
+                    (new Information(captureLog)).Show();
                 }
                 catch
                 {
@@ -317,6 +325,65 @@ namespace Video_Capture_DonK
             {
                 notification.Dispose();
             }
+        }
+
+        private void AudioButton_Click(object sender, EventArgs e)
+        {
+            if (selectedCompany == null || selectedCompany == "(Select a company)")
+            {
+                MessageBox.Show("Please select a company.");
+            }
+            else if (rec == null)
+            {
+                MessageBox.Show("You can only add notes while you're recording.");
+            }
+            else if (Program.Paused)
+            {
+                MessageBox.Show("You can't record audio when screen recording is paused.");
+            }
+            else
+            {
+                try
+                {
+                    if (audioRec == null)
+                    {
+                        StartAudioRecording(captureLog);
+                    }
+                    else
+                    {
+                        //MessageBox.Show("Audio saved.");
+                        audioButton.BackgroundImage = Properties.Resources.mic;
+                        audioRec.StopRecording();
+                        audioRec = null;
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Error in Audio application.");
+                }
+            }
+        }
+
+        private void StartAudioRecording(CaptureLog captureLog)
+        {
+            /*wasPlaying = false;
+            CompanyTime = DatabaseHandler.CalculateCompanyTimePassed(capturesFile, selectedCompany);
+            Program.Paused = false;*/
+            //string companyName = captureLog.CompanyName;
+            string directory = Path.Combine(VIDEOS_DIRECTORY, captureLog.CompanyName);
+            audioRec = new AudioRecorder(directory, /*companyName + "_" + */captureLog.GetFilename());
+            audioButton.BackgroundImage = Properties.Resources.mic_recording;
+        }
+        public void EnableControls(bool enabled = true)
+        {
+            this.Visible = enabled;
+            this.Enabled = enabled;
+        }
+
+        private void ScreenTimeButton_Click(object sender, EventArgs e)
+        {
+            EnableControls(false);
+            new FormSmall(this).Show();
         }
     }
 }

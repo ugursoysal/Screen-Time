@@ -18,14 +18,14 @@ namespace Video_Capture_DonK
         readonly string Company;
         readonly string filename;
         readonly CaptureLog captureLog;
-        public Information(string selectedCompany, CaptureLog capLog)
+        public Information(CaptureLog capLog)
         {
             captureLog = capLog;
             string directory = Path.Combine(Form1.VIDEOS_DIRECTORY, captureLog.CompanyName);
             filename = Path.Combine(directory, capLog.GetFilename() + ".txt");
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-            Company = selectedCompany;
+            Company = capLog.CompanyName;
             InitializeComponent();
         }
         private void Information_Load(object sender, EventArgs e)
