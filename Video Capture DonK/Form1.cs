@@ -138,7 +138,7 @@ namespace Video_Capture_DonK
             string directory = Path.Combine(VIDEOS_DIRECTORY, captureLog.CompanyName);
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-            rec = new Recorder(new RecorderParams(Path.Combine(directory, captureLog.GetFilename() + ".avi"), 16, SharpAvi.KnownFourCCs.Codecs.Xvid, 100));
+            rec = new Recorder(new RecorderParams(Path.Combine(directory, captureLog.GetFilename() + ".avi"), 30, SharpAvi.KnownFourCCs.Codecs.Xvid, 100));
             TimePassed = 0;
             timeTimer.Enabled = true;
             timeTimer.Start();
