@@ -1,10 +1,5 @@
 ﻿using NAudio.Wave;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Video_Capture_DonK
 {
@@ -29,7 +24,7 @@ namespace Video_Capture_DonK
                 version++;
                 path = Path.Combine(FilePath, FileName + "_" + version.ToString("00") + ".wav");
             }
-                
+
             waveIn = new WaveInEvent();
             waveIn.DataAvailable += this.SourceStreamDataAvailable;
 

@@ -87,6 +87,7 @@ namespace Video_Capture_DonK
             this.ScreenTimeButton.TabIndex = 0;
             this.ScreenTimeButton.UseVisualStyleBackColor = false;
             this.ScreenTimeButton.Click += new System.EventHandler(this.ScreenTimeButton_Click);
+            this.ScreenTimeButton.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ScreenTimeButton_MouseMove);
             // 
             // FormSmall
             // 
@@ -110,6 +111,7 @@ namespace Video_Capture_DonK
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.SystemColors.ActiveBorder;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormSmall_Closed);
+            this.LocationChanged += new System.EventHandler(this.FormSmall_LocationChanged);
             ((System.ComponentModel.ISupportInitialize)(this.indicatorLight)).EndInit();
             this.ResumeLayout(false);
 

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Video_Capture_DonK
@@ -21,7 +14,7 @@ namespace Video_Capture_DonK
         {
             this.timePassed = timePassed;
             this.timeTimer = timeTimer;
-            if(inactiveTimer == null)
+            if (inactiveTimer == null)
                 inactiveTimer = new Timer();
             inactiveTimer.Tick += new EventHandler(InactiveTimer_Tick);
             inactiveTimer.Interval = 1000;
@@ -59,7 +52,7 @@ namespace Video_Capture_DonK
                 timePassed.Text = Func.GetTimeText(main.CompanyTime + main.TimePassed);
                 inactiveTime++;
                 progressBar.Value = inactiveTime;
-                label1.Text = $"Your capture session will be ended in {59-inactiveTime} seconds due to inactivity.";
+                label1.Text = $"Your capture session will be ended in {59 - inactiveTime} seconds due to inactivity.";
             }
         }
     }

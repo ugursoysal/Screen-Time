@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace GetLastUserInput
-{    public class GetLastUserInput
+{
+    public class GetLastUserInput
     {
         private struct LASTINPUTINFO
         {

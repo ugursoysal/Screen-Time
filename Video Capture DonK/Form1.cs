@@ -1,14 +1,11 @@
 ﻿using Captura;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Video_Capture_DonK.Models;
 
@@ -26,13 +23,13 @@ namespace Video_Capture_DonK
         private readonly string companiesFile = "companies.json";
         private readonly string capturesFile = "capture_logs.json";
         bool wasPlaying = false;
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
         public int TimePassed = 0;
         public int CompanyTime = 0;
         public Image RecordButtonImage { get { return this.recordButton.BackgroundImage; } }
         public Image IndicatorImage { get { return this.indicatorLight.BackgroundImage; } }
         readonly System.Windows.Forms.Timer timeTimer = null;
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -141,7 +138,7 @@ namespace Video_Capture_DonK
             string directory = Path.Combine(VIDEOS_DIRECTORY, captureLog.CompanyName);
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-            rec = new Recorder(new RecorderParams(Path.Combine(directory, captureLog.GetFilename() + ".avi"), 30, SharpAvi.KnownFourCCs.Codecs.Xvid, 100));
+            rec = new Recorder(new RecorderParams(Path.Combine(directory, captureLog.GetFilename() + ".avi"), 16, SharpAvi.KnownFourCCs.Codecs.Xvid, 100));
             TimePassed = 0;
             timeTimer.Enabled = true;
             timeTimer.Start();
@@ -150,7 +147,7 @@ namespace Video_Capture_DonK
         {
             if (rec != null)
             {
-                if(audioRec != null)
+                if (audioRec != null)
                 {
                     audioButton.BackgroundImage = Properties.Resources.mic;
                     audioRec.StopRecording();
@@ -384,6 +381,21 @@ namespace Video_Capture_DonK
         {
             EnableControls(false);
             new FormSmall(this).Show();
+        }
+
+        private void CompanyLabel_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.companyDropList.Focus();
+            this.companyDropList.DroppedDown = true;
+        }
+
+        private void ScreenTimeButton_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
         }
     }
 }

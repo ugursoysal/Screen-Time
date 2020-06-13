@@ -1,12 +1,12 @@
-﻿using System;
+﻿using SharpAvi;
+using SharpAvi.Codecs;
+using SharpAvi.Output;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using SharpAvi;
-using SharpAvi.Codecs;
-using SharpAvi.Output;
 using System.Windows.Forms;
 using Video_Capture_DonK;
 

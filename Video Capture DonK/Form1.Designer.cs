@@ -135,6 +135,7 @@ namespace Video_Capture_DonK
             this.companyLabel.TabIndex = 4;
             this.companyLabel.Text = "(Select a company)";
             this.companyLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.companyLabel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CompanyLabel_MouseClick);
             // 
             // indicatorLight
             // 
@@ -201,6 +202,7 @@ namespace Video_Capture_DonK
             this.ScreenTimeButton.TabIndex = 0;
             this.ScreenTimeButton.UseVisualStyleBackColor = false;
             this.ScreenTimeButton.Click += new System.EventHandler(this.ScreenTimeButton_Click);
+            this.ScreenTimeButton.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ScreenTimeButton_MouseMove);
             // 
             // Form1
             // 

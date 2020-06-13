@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Video_Capture_DonK.Models;
 
@@ -38,7 +30,7 @@ namespace Video_Capture_DonK
                 string text = File.ReadAllText(filename);
                 textBox1.Text = text;
             }
-            catch(Exception x)
+            catch (Exception x)
             {
                 MessageBox.Show("Error occured while loading the notes of this session." + Environment.NewLine + Environment.NewLine + x.Message);
                 this.Close();
@@ -80,7 +72,7 @@ namespace Video_Capture_DonK
                     File.Create(filename).Close();
                 File.WriteAllText(filename, textBox1.Text);
             }
-            catch(Exception x)
+            catch (Exception x)
             {
                 MessageBox.Show("Error occured while saving the notes of this session." + Environment.NewLine + Environment.NewLine + x.Message);
                 Dispose();

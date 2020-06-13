@@ -2,10 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Video_Capture_DonK.Models;
 
@@ -60,7 +56,7 @@ namespace Video_Capture_DonK
             try
             {
                 string json = File.ReadAllText(filename);
-                if(json != null && json.Length > 0)
+                if (json != null && json.Length > 0)
                     return JsonConvert.DeserializeObject<List<CaptureLog>>(json);
             }
             catch
@@ -86,7 +82,7 @@ namespace Video_Capture_DonK
             }
             try
             {
-                if(companies != null)
+                if (companies != null)
                     File.WriteAllText(filename, JsonConvert.SerializeObject(companies));
             }
             catch
@@ -111,7 +107,7 @@ namespace Video_Capture_DonK
             }
             try
             {
-                if(captureLogs != null)
+                if (captureLogs != null)
                     File.WriteAllText(filename, JsonConvert.SerializeObject(captureLogs));
             }
             catch
@@ -126,9 +122,9 @@ namespace Video_Capture_DonK
             List<CaptureLog> captureLogs = LoadCaptureLogs(filename);
             if (captureLogs == null)
                 return 0;
-            foreach(var x in captureLogs)
+            foreach (var x in captureLogs)
             {
-                if(x.CompanyName == company && DateTime.Today.Date == x.DateTime.Date)
+                if (x.CompanyName == company && DateTime.Today.Date == x.DateTime.Date)
                 {
                     TimePassed += x.TimePassed;
                 }

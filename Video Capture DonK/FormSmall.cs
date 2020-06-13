@@ -1,16 +1,6 @@
-﻿using Captura;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Video_Capture_DonK.Models;
 
 namespace Video_Capture_DonK
 {
@@ -46,5 +36,28 @@ namespace Video_Capture_DonK
             Form1.EnableControls();
             Form1.Show();
         }
+
+        private void ScreenTimeButton_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Form1.ReleaseCapture();
+                Form1.SendMessage(this.Handle, Form1.WM_NCLBUTTONDOWN, Form1.HT_CAPTION, 0);
+            }
+        }
+
+        private void FormSmall_LocationChanged(object sender, EventArgs e)
+        {
+            Form1.SetDesktopLocation(this.DesktopLocation.X, this.DesktopLocation.Y);
+        }
+
+        /*private void ScreenTimeButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Form1.ReleaseCapture();
+                Form1.SendMessage(Handle, Form1.WM_NCLBUTTONDOWN, Form1.HT_CAPTION, 0);
+            }
+        }*/
     }
 }
