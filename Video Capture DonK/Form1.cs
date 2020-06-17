@@ -399,5 +399,11 @@ namespace Video_Capture_DonK
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            TopLevel = true;
+            TopMost = true;
+        }
     }
 }
