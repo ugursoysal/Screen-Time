@@ -42,6 +42,8 @@ namespace Video_Capture_DonK
             timeTimer.Interval = 1000;
             timeTimer.Enabled = false;
             timeTimer.Stop();
+            this.TopMost = true;
+            this.TopLevel = true;
             LoadData();
             InitializeComponent();
             PopulateDropLists();

@@ -12,6 +12,8 @@ namespace Video_Capture_DonK
         readonly CaptureLog captureLog;
         public Information(CaptureLog capLog)
         {
+            this.TopMost = true;
+            this.TopLevel = true;
             captureLog = capLog;
             string directory = Path.Combine(Form1.VIDEOS_DIRECTORY, captureLog.CompanyName);
             filename = Path.Combine(directory, capLog.GetFilename() + ".txt");

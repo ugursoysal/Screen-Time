@@ -12,6 +12,8 @@ namespace Video_Capture_DonK
             Form1 = form1;
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(Form1.Location.X, Form1.Location.Y);
+            this.TopMost = true;
+            this.TopLevel = true;
             InitializeComponent();
             SetIndicator();
         }

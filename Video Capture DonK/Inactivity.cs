@@ -12,6 +12,8 @@ namespace Video_Capture_DonK
         private int inactiveTime = 0;
         public Inactivity(Form1 form1, Timer timeTimer, Label timePassed)
         {
+            this.TopMost = true;
+            this.TopLevel = true;
             this.timePassed = timePassed;
             this.timeTimer = timeTimer;
             if (inactiveTimer == null)

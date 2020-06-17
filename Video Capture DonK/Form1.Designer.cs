@@ -231,6 +231,7 @@ namespace Video_Capture_DonK
             this.Name = "Form1";
             this.Text = "ScreenTime";
             this.TopMost = true;
+            this.TopLevel = true;
             this.TransparencyKey = System.Drawing.SystemColors.ActiveBorder;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_Closing);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
