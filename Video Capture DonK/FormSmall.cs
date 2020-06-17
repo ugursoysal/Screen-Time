@@ -36,6 +36,8 @@ namespace Video_Capture_DonK
         private void FormSmall_Closed(object sender, FormClosedEventArgs e)
         {
             Form1.EnableControls();
+            Form1.TopMost = true;
+            Form1.TopLevel = true;
             Form1.Show();
         }
 
